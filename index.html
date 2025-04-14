@@ -583,8 +583,8 @@ input:focus, select:focus {
         if (foundFruit) {
             fruitCheckResult.innerHTML = `
                 <strong>${foundFruit.name}</strong> is available at $${foundFruit.price.toFixed(2)} per kg.<br>
-                Sold by: ${foundFruit.seller}
-            `;
+              
+            
             fruitCheckResult.style.color = 'green';
         } else {
             fruitCheckResult.textContent = 'Fruit not found in our inventory';
