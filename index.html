@@ -580,12 +580,12 @@ input:focus, select:focus {
             fruit.name.toLowerCase().includes(searchTerm)
         );
         
-        if (foundFruit) {
-            fruitCheckResult.innerHTML = `
-                <strong>${foundFruit.name}</strong> is available at $${foundFruit.price.toFixed(2)} per kg.<br>
-              
-            
-            fruitCheckResult.style.color = 'green';
+       if (foundFruit) {
+    fruitCheckResult.innerHTML = `
+        <strong>${foundFruit.name}</strong> is available at $${foundFruit.price.toFixed(2)} per kg.
+    `;
+    fruitCheckResult.style.color = 'green';
+
         } else {
             fruitCheckResult.textContent = 'Fruit not found in our inventory';
             fruitCheckResult.style.color = 'red';
