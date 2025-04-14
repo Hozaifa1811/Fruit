@@ -79,6 +79,10 @@ h2::after {
 }
 
 /* Section Styles */
+
+.hidden {
+    display: none;
+}
 .login-section, .fruit-section, .order-section {
     background-color: white;
     padding: 25px;
@@ -447,222 +451,227 @@ input:focus, select:focus {
         </section>
     </div>
 
-    <script>
-        // Fruit data
-        const fruits = [
-            { name: "Apple", price: 2.50, seller: "Seller 1" },
-            { name: "Banana", price: 1.80, seller: "Seller 1" },
-            { name: "Orange", price: 3.20, seller: "Seller 2" },
-            { name: "Mango", price: 4.50, seller: "Seller 2" },
-            { name: "Grapes", price: 3.80, seller: "Seller 3" },
-            { name: "Pineapple", price: 5.20, seller: "Seller 3" },
-            { name: "Watermelon", price: 7.50, seller: "Seller 1" },
-            { name: "Strawberry", price: 6.80, seller: "Seller 2" },
-            { name: "Peach", price: 4.20, seller: "Seller 3" },
-            { name: "Pear", price: 3.50, seller: "Seller 1" }
-        ];
+ <script>
+    // Fruit data
+    const fruits = [
+        { name: "Apple", price: 2.50, seller: "Seller 1" },
+        { name: "Banana", price: 1.80, seller: "Seller 1" },
+        { name: "Orange", price: 3.20, seller: "Seller 2" },
+        { name: "Mango", price: 4.50, seller: "Seller 2" },
+        { name: "Grapes", price: 3.80, seller: "Seller 3" },
+        { name: "Pineapple", price: 5.20, seller: "Seller 3" },
+        { name: "Watermelon", price: 7.50, seller: "Seller 1" },
+        { name: "Strawberry", price: 6.80, seller: "Seller 2" },
+        { name: "Peach", price: 4.20, seller: "Seller 3" },
+        { name: "Pear", price: 3.50, seller: "Seller 1" }
+    ];
 
-        // Seller credentials
-        const sellers = [
-            { username: "seller1", password: "pass1", name: "Seller 1" },
-            { username: "seller2", password: "pass2", name: "Seller 2" },
-            { username: "seller3", password: "pass3", name: "Seller 3" }
-        ];
+    // Seller credentials
+    const sellers = [
+        { username: "seller1", password: "pass1", name: "Seller 1" },
+        { username: "seller2", password: "pass2", name: "Seller 2" },
+        { username: "seller3", password: "pass3", name: "Seller 3" }
+    ];
 
-        // DOM elements
-        const loginSection = document.getElementById('loginSection');
-        const sellerDashboard = document.getElementById('sellerDashboard');
-        const loginForm = document.getElementById('loginForm');
-        const sellerInfo = document.getElementById('sellerInfo');
-        const fruitTableBody = document.getElementById('fruitTableBody');
-        const fruitSearch = document.getElementById('fruitSearch');
-        const checkFruitBtn = document.getElementById('checkFruitBtn');
-        const fruitCheckResult = document.getElementById('fruitCheckResult');
-        const orderItems = document.getElementById('orderItems');
-        const addItemBtn = document.getElementById('addItemBtn');
-        const calculateTotalBtn = document.getElementById('calculateTotalBtn');
-        const orderResults = document.getElementById('orderResults');
-        const logoutBtn = document.getElementById('logoutBtn');
+    // DOM elements
+    const loginSection = document.getElementById('loginSection');
+    const sellerDashboard = document.getElementById('sellerDashboard');
+    const loginForm = document.getElementById('loginForm');
+    const sellerInfo = document.getElementById('sellerInfo');
+    const fruitTableBody = document.getElementById('fruitTableBody');
+    const fruitSearch = document.getElementById('fruitSearch');
+    const checkFruitBtn = document.getElementById('checkFruitBtn');
+    const fruitCheckResult = document.getElementById('fruitCheckResult');
+    const orderItems = document.getElementById('orderItems');
+    const addItemBtn = document.getElementById('addItemBtn');
+    const calculateTotalBtn = document.getElementById('calculateTotalBtn');
+    const orderResults = document.getElementById('orderResults');
+    const logoutBtn = document.getElementById('logoutBtn');
 
-        // Current logged in seller
-        let currentSeller = null;
+    // Current logged in seller
+    let currentSeller = null;
 
-        // Initialize the page
-        function init() {
-            populateFruitTable();
-            populateFruitSelects();
-            
-            // Event listeners
-            loginForm.addEventListener('submit', handleLogin);
-            checkFruitBtn.addEventListener('click', checkFruitAvailability);
-            addItemBtn.addEventListener('click', addOrderItem);
-            calculateTotalBtn.addEventListener('click', calculateTotal);
-            logoutBtn.addEventListener('click', logout);
-            
-            // Event delegation for remove buttons
-            orderItems.addEventListener('click', function(e) {
-                if (e.target.classList.contains('removeItemBtn')) {
-                    if (document.querySelectorAll('.order-item').length > 1) {
-                        e.target.parentElement.remove();
-                    } else {
-                        alert("You need at least one item in the order.");
-                    }
+    // Initialize the page
+    function init() {
+        // Hide dashboard by default
+        sellerDashboard.classList.add('hidden');
+        loginSection.classList.remove('hidden');
+        
+        populateFruitTable();
+        populateFruitSelects();
+        
+        // Event listeners
+        loginForm.addEventListener('submit', handleLogin);
+        checkFruitBtn.addEventListener('click', checkFruitAvailability);
+        addItemBtn.addEventListener('click', addOrderItem);
+        calculateTotalBtn.addEventListener('click', calculateTotal);
+        logoutBtn.addEventListener('click', logout);
+        
+        // Event delegation for remove buttons
+        orderItems.addEventListener('click', function(e) {
+            if (e.target.classList.contains('removeItemBtn')) {
+                if (document.querySelectorAll('.order-item').length > 1) {
+                    e.target.parentElement.remove();
+                } else {
+                    alert("You need at least one item in the order.");
                 }
-            });
-        }
-
-        // Populate fruit table
-        function populateFruitTable() {
-            fruitTableBody.innerHTML = '';
-            fruits.forEach(fruit => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${fruit.name}</td>
-                    <td>$${fruit.price.toFixed(2)}</td>
-                    <td>${fruit.seller}</td>
-                `;
-                fruitTableBody.appendChild(row);
-            });
-        }
-
-        // Populate fruit selects in order form
-        function populateFruitSelects() {
-            const selects = document.querySelectorAll('.fruitSelect');
-            selects.forEach(select => {
-                select.innerHTML = '<option value="">Select a fruit</option>';
-                fruits.forEach(fruit => {
-                    const option = document.createElement('option');
-                    option.value = fruit.name;
-                    option.textContent = `${fruit.name} ($${fruit.price.toFixed(2)}/kg)`;
-                    select.appendChild(option);
-                });
-            });
-        }
-
-        // Handle login
-        function handleLogin(e) {
-            e.preventDefault();
-            const username = document.getElementById('sellerUsername').value;
-            const password = document.getElementById('sellerPassword').value;
-            
-            const seller = sellers.find(s => s.username === username && s.password === password);
-            
-            if (seller) {
-                currentSeller = seller;
-                sellerInfo.textContent = `Logged in as: ${seller.name}`;
-                loginSection.classList.add('hidden');
-                sellerDashboard.classList.remove('hidden');
-                document.getElementById('sellerUsername').value = '';
-                document.getElementById('sellerPassword').value = '';
-            } else {
-                alert('Invalid username or password');
             }
-        }
+        });
+    }
 
-        // Check fruit availability
-        function checkFruitAvailability() {
-            const searchTerm = fruitSearch.value.trim().toLowerCase();
-            if (!searchTerm) {
-                fruitCheckResult.textContent = 'Please enter a fruit name';
-                fruitCheckResult.style.color = 'red';
-                return;
-            }
-            
-            const foundFruit = fruits.find(fruit => 
-                fruit.name.toLowerCase().includes(searchTerm)
-            );
-            
-            if (foundFruit) {
-                fruitCheckResult.innerHTML = `
-                    <strong>${foundFruit.name}</strong> is available at $${foundFruit.price.toFixed(2)} per kg.<br>
-                    Sold by: ${foundFruit.seller}
-                `;
-                fruitCheckResult.style.color = 'green';
-            } else {
-                fruitCheckResult.textContent = 'Fruit not found in our inventory';
-                fruitCheckResult.style.color = 'red';
-            }
-        }
-
-        // Add new order item
-        function addOrderItem() {
-            const newItem = document.createElement('div');
-            newItem.className = 'order-item';
-            newItem.innerHTML = `
-                <select class="fruitSelect">
-                    <option value="">Select a fruit</option>
-                </select>
-                <input type="number" class="fruitQuantity" placeholder="Quantity (kg)" min="0.1" step="0.1">
-                <button class="removeItemBtn">Remove</button>
+    // Populate fruit table
+    function populateFruitTable() {
+        fruitTableBody.innerHTML = '';
+        fruits.forEach(fruit => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${fruit.name}</td>
+                <td>$${fruit.price.toFixed(2)}</td>
+                <td>${fruit.seller}</td>
             `;
-            orderItems.appendChild(newItem);
-            
-            // Populate the new select
-            const newSelect = newItem.querySelector('.fruitSelect');
+            fruitTableBody.appendChild(row);
+        });
+    }
+
+    // Populate fruit selects in order form
+    function populateFruitSelects() {
+        const selects = document.querySelectorAll('.fruitSelect');
+        selects.forEach(select => {
+            select.innerHTML = '<option value="">Select a fruit</option>';
             fruits.forEach(fruit => {
                 const option = document.createElement('option');
                 option.value = fruit.name;
                 option.textContent = `${fruit.name} ($${fruit.price.toFixed(2)}/kg)`;
-                newSelect.appendChild(option);
+                select.appendChild(option);
             });
-        }
+        });
+    }
 
-        // Calculate order total
-        function calculateTotal() {
-            const items = document.querySelectorAll('.order-item');
-            let total = 0;
-            let orderDetails = '<h3>Order Summary</h3><ul>';
-            let hasErrors = false;
-            
-            items.forEach((item, index) => {
-                const fruitSelect = item.querySelector('.fruitSelect');
-                const quantityInput = item.querySelector('.fruitQuantity');
-                
-                if (!fruitSelect.value) {
-                    alert(`Please select a fruit for item ${index + 1}`);
-                    hasErrors = true;
-                    return;
-                }
-                
-                if (!quantityInput.value || parseFloat(quantityInput.value) <= 0) {
-                    alert(`Please enter a valid quantity for item ${index + 1}`);
-                    hasErrors = true;
-                    return;
-                }
-                
-                const fruit = fruits.find(f => f.name === fruitSelect.value);
-                const quantity = parseFloat(quantityInput.value);
-                const itemTotal = fruit.price * quantity;
-                
-                total += itemTotal;
-                orderDetails += `<li>${quantity.toFixed(2)}kg ${fruit.name} @ $${fruit.price.toFixed(2)}/kg = $${itemTotal.toFixed(2)}</li>`;
-            });
-            
-            if (hasErrors) return;
-            
-            orderDetails += `</ul><p><strong>Total: $${total.toFixed(2)}</strong></p>`;
-            orderResults.innerHTML = orderDetails;
+    // Handle login
+    function handleLogin(e) {
+        e.preventDefault();
+        const username = document.getElementById('sellerUsername').value;
+        const password = document.getElementById('sellerPassword').value;
+        
+        const seller = sellers.find(s => s.username === username && s.password === password);
+        
+        if (seller) {
+            currentSeller = seller;
+            sellerInfo.textContent = `Logged in as: ${seller.name}`;
+            loginSection.classList.add('hidden');
+            sellerDashboard.classList.remove('hidden');
+            document.getElementById('sellerUsername').value = '';
+            document.getElementById('sellerPassword').value = '';
+        } else {
+            alert('Invalid username or password');
         }
+    }
 
-        // Logout
-        function logout() {
-            currentSeller = null;
-            sellerDashboard.classList.add('hidden');
-            loginSection.classList.remove('hidden');
-            orderResults.innerHTML = '';
-            // Reset order form
-            const items = document.querySelectorAll('.order-item');
-            if (items.length > 1) {
-                for (let i = 1; i < items.length; i++) {
-                    items[i].remove();
-                }
+    // Check fruit availability
+    function checkFruitAvailability() {
+        const searchTerm = fruitSearch.value.trim().toLowerCase();
+        if (!searchTerm) {
+            fruitCheckResult.textContent = 'Please enter a fruit name';
+            fruitCheckResult.style.color = 'red';
+            return;
+        }
+        
+        const foundFruit = fruits.find(fruit => 
+            fruit.name.toLowerCase().includes(searchTerm)
+        );
+        
+        if (foundFruit) {
+            fruitCheckResult.innerHTML = `
+                <strong>${foundFruit.name}</strong> is available at $${foundFruit.price.toFixed(2)} per kg.<br>
+                Sold by: ${foundFruit.seller}
+            `;
+            fruitCheckResult.style.color = 'green';
+        } else {
+            fruitCheckResult.textContent = 'Fruit not found in our inventory';
+            fruitCheckResult.style.color = 'red';
+        }
+    }
+
+    // Add new order item
+    function addOrderItem() {
+        const newItem = document.createElement('div');
+        newItem.className = 'order-item';
+        newItem.innerHTML = `
+            <select class="fruitSelect">
+                <option value="">Select a fruit</option>
+            </select>
+            <input type="number" class="fruitQuantity" placeholder="Quantity (kg)" min="0.1" step="0.1">
+            <button class="removeItemBtn">Remove</button>
+        `;
+        orderItems.appendChild(newItem);
+        
+        // Populate the new select
+        const newSelect = newItem.querySelector('.fruitSelect');
+        fruits.forEach(fruit => {
+            const option = document.createElement('option');
+            option.value = fruit.name;
+            option.textContent = `${fruit.name} ($${fruit.price.toFixed(2)}/kg)`;
+            newSelect.appendChild(option);
+        });
+    }
+
+    // Calculate order total
+    function calculateTotal() {
+        const items = document.querySelectorAll('.order-item');
+        let total = 0;
+        let orderDetails = '<h3>Order Summary</h3><ul>';
+        let hasErrors = false;
+        
+        items.forEach((item, index) => {
+            const fruitSelect = item.querySelector('.fruitSelect');
+            const quantityInput = item.querySelector('.fruitQuantity');
+            
+            if (!fruitSelect.value) {
+                alert(`Please select a fruit for item ${index + 1}`);
+                hasErrors = true;
+                return;
             }
-            items[0].querySelector('.fruitSelect').value = '';
-            items[0].querySelector('.fruitQuantity').value = '';
-        }
+            
+            if (!quantityInput.value || parseFloat(quantityInput.value) <= 0) {
+                alert(`Please enter a valid quantity for item ${index + 1}`);
+                hasErrors = true;
+                return;
+            }
+            
+            const fruit = fruits.find(f => f.name === fruitSelect.value);
+            const quantity = parseFloat(quantityInput.value);
+            const itemTotal = fruit.price * quantity;
+            
+            total += itemTotal;
+            orderDetails += `<li>${quantity.toFixed(2)}kg ${fruit.name} @ $${fruit.price.toFixed(2)}/kg = $${itemTotal.toFixed(2)}</li>`;
+        });
+        
+        if (hasErrors) return;
+        
+        orderDetails += `</ul><p><strong>Total: $${total.toFixed(2)}</strong></p>`;
+        orderResults.innerHTML = orderDetails;
+    }
 
-        // Initialize the page when loaded
-        window.onload = init;
-    </script>
+    // Logout
+    function logout() {
+        currentSeller = null;
+        sellerDashboard.classList.add('hidden');
+        loginSection.classList.remove('hidden');
+        orderResults.innerHTML = '';
+        fruitCheckResult.innerHTML = ''; // This line clears the fruit check result
+        // Reset order form
+        const items = document.querySelectorAll('.order-item');
+        if (items.length > 1) {
+            for (let i = 1; i < items.length; i++) {
+                items[i].remove();
+            }
+        }
+        items[0].querySelector('.fruitSelect').value = '';
+        items[0].querySelector('.fruitQuantity').value = '';
+    }
+
+    // Initialize the page when loaded
+    window.onload = init;
+</script>
 </body>
 </html>
