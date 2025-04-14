@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fresh Fruit Market</title>
+   </head>
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+    color: #333;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header Styles */
+header {
+    background: linear-gradient(to right, #56ab2f, #a8e063);
+    color: white;
+    padding: 30px 0;
+    text-align: center;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+header::before {
+    content: "🍎 🍌 🍊 🥭 🍇 🍍 🍉 🍓 🍑 🍐";
+    position: absolute;
+    font-size: 24px;
+    opacity: 0.2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+}
+
+h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+h1::after {
+    content: "🍏";
+    position: absolute;
+    right: -40px;
+    top: -10px;
+    font-size: 2rem;
+    animation: bounce 2s infinite;
+}
+
+h2 {
+    color: #2e7d32;
+    position: relative;
+    display: inline-block;
+}
+
+h2::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(to right, #56ab2f, #a8e063);
+    border-radius: 3px;
+}
+
+/* Section Styles */
+.login-section, .fruit-section, .order-section {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.login-section:hover, .fruit-section:hover, .order-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 20px 0;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+th {
+    background: linear-gradient(to right, #56ab2f, #a8e063);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f8e9;
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+}
+
+/* Button Styles */
+button {
+    background: linear-gradient(to right, #56ab2f, #a8e063);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 8px 2px;
+    cursor: pointer;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(86, 171, 47, 0.3);
+    transition: all 0.3s ease;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(86, 171, 47, 0.4);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+button::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
+button:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+}
+
+/* Input Styles */
+input, select {
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f9f9f9;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #a8e063;
+    box-shadow: 0 0 0 3px rgba(168, 224, 99, 0.2);
+    background-color: white;
+}
+
+/* Seller Info */
+.seller-info {
+    background: linear-gradient(to right, #e8f5e9, #c8e6c9);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #2e7d32;
+    border-left: 5px solid #a8e063;
+    display: flex;
+    align-items: center;
+}
+
+.seller-info::before {
+    content: "👨‍🌾";
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+/* Order Items */
+.order-item {
+    display: flex;
+    margin-bottom: 15px;
+    align-items: center;
+    gap: 10px;
+}
+
+.order-item select, .order-item input {
+    margin-right: 0;
+    flex: 1;
+}
+
+.removeItemBtn {
+    padding: 10px 15px;
+    background: linear-gradient(to right, #ff5252, #ff867f);
+    box-shadow: 0 4px 8px rgba(255, 82, 82, 0.3);
+}
+
+.removeItemBtn:hover {
+    box-shadow: 0 6px 12px rgba(255, 82, 82, 0.4);
+}
+
+/* Results Section */
+#orderResults {
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(to right, #e8f5e9, #c8e6c9);
+    border-radius: 8px;
+    border-left: 5px solid #a8e063;
+    animation: fadeIn 0.5s ease-out;
+}
+
+#orderResults h3 {
+    margin-top: 0;
+    color: #2e7d32;
+}
+
+#orderResults ul {
+    padding-left: 20px;
+}
+
+#orderResults li {
+    margin-bottom: 8px;
+    position: relative;
+}
+
+#orderResults li::before {
+    content: "🍎";
+    position: absolute;
+    left: -25px;
+}
+
+#orderResults strong {
+    color: #1b5e20;
+}
+
+/* Fruit Check Result */
+#fruitCheckResult {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+/* Animations */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 1;
+    }
+    20% {
+        transform: scale(25, 25);
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(40, 40);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Fruit Icons in Table */
+#fruitTableBody tr td:first-child::before {
+    content: "";
+    margin-right: 8px;
+}
+
+#fruitTableBody tr:nth-child(1) td:first-child::before {
+    content: "🍎";
+}
+
+#fruitTableBody tr:nth-child(2) td:first-child::before {
+    content: "🍌";
+}
+
+#fruitTableBody tr:nth-child(3) td:first-child::before {
+    content: "🍊";
+}
+
+#fruitTableBody tr:nth-child(4) td:first-child::before {
+    content: "🥭";
+}
+
+#fruitTableBody tr:nth-child(5) td:first-child::before {
+    content: "🍇";
+}
+
+#fruitTableBody tr:nth-child(6) td:first-child::before {
+    content: "🍍";
+}
+
+#fruitTableBody tr:nth-child(7) td:first-child::before {
+    content: "🍉";
+}
+
+#fruitTableBody tr:nth-child(8) td:first-child::before {
+    content: "🍓";
+}
+
+#fruitTableBody tr:nth-child(9) td:first-child::before {
+    content: "🍑";
+}
+
+#fruitTableBody tr:nth-child(10) td:first-child::before {
+    content: "🍐";
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .order-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    header {
+        padding: 20px 0;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    h1::after {
+        font-size: 1.5rem;
+        right: -30px;
+    }
+}
+</style>
+<body>
+    <div class="container">
+        <header>
+            <h1>Fresh Fruit Market</h1>
+            <p>Your one-stop shop for the freshest fruits</p>
+        </header>
+
+        <!-- Login Section -->
+        <section class="login-section" id="loginSection">
+            <h2>Seller Login</h2>
+            <form id="loginForm">
+                <label for="sellerUsername">Username:</label>
+                <input type="text" id="sellerUsername" required>
+                
+                <label for="sellerPassword">Password:</label>
+                <input type="password" id="sellerPassword" required>
+                
+                <button type="submit">Login</button>
+            </form>
+        </section>
+
+        <!-- Seller Dashboard (hidden until login) -->
+        <section class="seller-dashboard hidden" id="sellerDashboard">
+            <div class="seller-info" id="sellerInfo"></div>
+            
+            <!-- Fruit Check Section -->
+            <section class="fruit-section">
+                <h2>Check Fruit Availability</h2>
+                <input type="text" id="fruitSearch" placeholder="Enter fruit name">
+                <button id="checkFruitBtn">Check Availability</button>
+                <div id="fruitCheckResult" style="margin-top: 10px;"></div>
+            </section>
+
+            <!-- Fruit List -->
+            <section class="fruit-section">
+                <h2>Available Fruits</h2>
+                <table id="fruitTable">
+                    <thead>
+                        <tr>
+                            <th>Fruit</th>
+                            <th>Price per kg</th>
+                            <th>Seller</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fruitTableBody">
+                        <!-- Fruits will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Order Section -->
+            <section class="order-section">
+                <h2>Create Order</h2>
+                <div id="orderItems">
+                    <div class="order-item">
+                        <select class="fruitSelect">
+                            <option value="">Select a fruit</option>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                        <input type="number" class="fruitQuantity" placeholder="Quantity (kg)" min="0.1" step="0.1">
+                        <button class="removeItemBtn">Remove</button>
+                    </div>
+                </div>
+                <button id="addItemBtn">Add Another Fruit</button>
+                <button id="calculateTotalBtn">Calculate Total</button>
+                <div id="orderResults"></div>
+            </section>
+
+            <button id="logoutBtn" style="margin-top: 20px;">Logout</button>
+        </section>
+    </div>
+
+    <script>
+        // Fruit data
+        const fruits = [
+            { name: "Apple", price: 2.50, seller: "Seller 1" },
+            { name: "Banana", price: 1.80, seller: "Seller 1" },
+            { name: "Orange", price: 3.20, seller: "Seller 2" },
+            { name: "Mango", price: 4.50, seller: "Seller 2" },
+            { name: "Grapes", price: 3.80, seller: "Seller 3" },
+            { name: "Pineapple", price: 5.20, seller: "Seller 3" },
+            { name: "Watermelon", price: 7.50, seller: "Seller 1" },
+            { name: "Strawberry", price: 6.80, seller: "Seller 2" },
+            { name: "Peach", price: 4.20, seller: "Seller 3" },
+            { name: "Pear", price: 3.50, seller: "Seller 1" }
+        ];
+
+        // Seller credentials
+        const sellers = [
+            { username: "seller1", password: "pass1", name: "Seller 1" },
+            { username: "seller2", password: "pass2", name: "Seller 2" },
+            { username: "seller3", password: "pass3", name: "Seller 3" }
+        ];
+
+        // DOM elements
+        const loginSection = document.getElementById('loginSection');
+        const sellerDashboard = document.getElementById('sellerDashboard');
+        const loginForm = document.getElementById('loginForm');
+        const sellerInfo = document.getElementById('sellerInfo');
+        const fruitTableBody = document.getElementById('fruitTableBody');
+        const fruitSearch = document.getElementById('fruitSearch');
+        const checkFruitBtn = document.getElementById('checkFruitBtn');
+        const fruitCheckResult = document.getElementById('fruitCheckResult');
+        const orderItems = document.getElementById('orderItems');
+        const addItemBtn = document.getElementById('addItemBtn');
+        const calculateTotalBtn = document.getElementById('calculateTotalBtn');
+        const orderResults = document.getElementById('orderResults');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Current logged in seller
+        let currentSeller = null;
+
+        // Initialize the page
+        function init() {
+            populateFruitTable();
+            populateFruitSelects();
+            
+            // Event listeners
+            loginForm.addEventListener('submit', handleLogin);
+            checkFruitBtn.addEventListener('click', checkFruitAvailability);
+            addItemBtn.addEventListener('click', addOrderItem);
+            calculateTotalBtn.addEventListener('click', calculateTotal);
+            logoutBtn.addEventListener('click', logout);
+            
+            // Event delegation for remove buttons
+            orderItems.addEventListener('click', function(e) {
+                if (e.target.classList.contains('removeItemBtn')) {
+                    if (document.querySelectorAll('.order-item').length > 1) {
+                        e.target.parentElement.remove();
+                    } else {
+                        alert("You need at least one item in the order.");
+                    }
+                }
+            });
+        }
+
+        // Populate fruit table
+        function populateFruitTable() {
+            fruitTableBody.innerHTML = '';
+            fruits.forEach(fruit => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${fruit.name}</td>
+                    <td>$${fruit.price.toFixed(2)}</td>
+                    <td>${fruit.seller}</td>
+                `;
+                fruitTableBody.appendChild(row);
+            });
+        }
+
+        // Populate fruit selects in order form
+        function populateFruitSelects() {
+            const selects = document.querySelectorAll('.fruitSelect');
+            selects.forEach(select => {
+                select.innerHTML = '<option value="">Select a fruit</option>';
+                fruits.forEach(fruit => {
+                    const option = document.createElement('option');
+                    option.value = fruit.name;
+                    option.textContent = `${fruit.name} ($${fruit.price.toFixed(2)}/kg)`;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        // Handle login
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('sellerUsername').value;
+            const password = document.getElementById('sellerPassword').value;
+            
+            const seller = sellers.find(s => s.username === username && s.password === password);
+            
+            if (seller) {
+                currentSeller = seller;
+                sellerInfo.textContent = `Logged in as: ${seller.name}`;
+                loginSection.classList.add('hidden');
+                sellerDashboard.classList.remove('hidden');
+                document.getElementById('sellerUsername').value = '';
+                document.getElementById('sellerPassword').value = '';
+            } else {
+                alert('Invalid username or password');
+            }
+        }
+
+        // Check fruit availability
+        function checkFruitAvailability() {
+            const searchTerm = fruitSearch.value.trim().toLowerCase();
+            if (!searchTerm) {
+                fruitCheckResult.textContent = 'Please enter a fruit name';
+                fruitCheckResult.style.color = 'red';
+                return;
+            }
+            
+            const foundFruit = fruits.find(fruit => 
+                fruit.name.toLowerCase().includes(searchTerm)
+            );
+            
+            if (foundFruit) {
+                fruitCheckResult.innerHTML = `
+                    <strong>${foundFruit.name}</strong> is available at $${foundFruit.price.toFixed(2)} per kg.<br>
+                    Sold by: ${foundFruit.seller}
+                `;
+                fruitCheckResult.style.color = 'green';
+            } else {
+                fruitCheckResult.textContent = 'Fruit not found in our inventory';
+                fruitCheckResult.style.color = 'red';
+            }
+        }
+
+        // Add new order item
+        function addOrderItem() {
+            const newItem = document.createElement('div');
+            newItem.className = 'order-item';
+            newItem.innerHTML = `
+                <select class="fruitSelect">
+                    <option value="">Select a fruit</option>
+                </select>
+                <input type="number" class="fruitQuantity" placeholder="Quantity (kg)" min="0.1" step="0.1">
+                <button class="removeItemBtn">Remove</button>
+            `;
+            orderItems.appendChild(newItem);
+            
+            // Populate the new select
+            const newSelect = newItem.querySelector('.fruitSelect');
+            fruits.forEach(fruit => {
+                const option = document.createElement('option');
+                option.value = fruit.name;
+                option.textContent = `${fruit.name} ($${fruit.price.toFixed(2)}/kg)`;
+                newSelect.appendChild(option);
+            });
+        }
+
+        // Calculate order total
+        function calculateTotal() {
+            const items = document.querySelectorAll('.order-item');
+            let total = 0;
+            let orderDetails = '<h3>Order Summary</h3><ul>';
+            let hasErrors = false;
+            
+            items.forEach((item, index) => {
+                const fruitSelect = item.querySelector('.fruitSelect');
+                const quantityInput = item.querySelector('.fruitQuantity');
+                
+                if (!fruitSelect.value) {
+                    alert(`Please select a fruit for item ${index + 1}`);
+                    hasErrors = true;
+                    return;
+                }
+                
+                if (!quantityInput.value || parseFloat(quantityInput.value) <= 0) {
+                    alert(`Please enter a valid quantity for item ${index + 1}`);
+                    hasErrors = true;
+                    return;
+                }
+                
+                const fruit = fruits.find(f => f.name === fruitSelect.value);
+                const quantity = parseFloat(quantityInput.value);
+                const itemTotal = fruit.price * quantity;
+                
+                total += itemTotal;
+                orderDetails += `<li>${quantity.toFixed(2)}kg ${fruit.name} @ $${fruit.price.toFixed(2)}/kg = $${itemTotal.toFixed(2)}</li>`;
+            });
+            
+            if (hasErrors) return;
+            
+            orderDetails += `</ul><p><strong>Total: $${total.toFixed(2)}</strong></p>`;
+            orderResults.innerHTML = orderDetails;
+        }
+
+        // Logout
+        function logout() {
+            currentSeller = null;
+            sellerDashboard.classList.add('hidden');
+            loginSection.classList.remove('hidden');
+            orderResults.innerHTML = '';
+            // Reset order form
+            const items = document.querySelectorAll('.order-item');
+            if (items.length > 1) {
+                for (let i = 1; i < items.length; i++) {
+                    items[i].remove();
+                }
+            }
+            items[0].querySelector('.fruitSelect').value = '';
+            items[0].querySelector('.fruitQuantity').value = '';
+        }
+
+        // Initialize the page when loaded
+        window.onload = init;
+    </script>
+</body>
+</html>
